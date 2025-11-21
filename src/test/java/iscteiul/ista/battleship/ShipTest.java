@@ -32,47 +32,24 @@ public class ShipTest {
         }
     }
 
-    // ------------------------------
-    // LIFECYCLE METHODS
-    // ------------------------------
-
     @BeforeAll
-    @DisplayName("Before All Tests")
-    void beforeAll() {
-        System.out.println("Running @BeforeAll");
-    }
+    void beforeAll() { System.out.println("Running @BeforeAll"); }
 
     @BeforeEach
-    @DisplayName("Setting Up Test Ship Instance")
-    void setUp() {
-        ship = new TestShip(Compass.NORTH, new Position(0, 0), 3);
-    }
+    void setUp() { ship = new TestShip(Compass.NORTH, new Position(0, 0), 3); }
 
     @AfterEach
-    @DisplayName("Cleaning up after each test")
-    void afterEach() {
-        // No cleanup needed but included to demonstrate usage
-        System.out.println("Completed a test.");
-    }
+    void afterEach() { System.out.println("Completed a test."); }
 
     @AfterAll
-    @DisplayName("After All Tests")
-    void afterAll() {
-        System.out.println("Running @AfterAll");
-    }
+    void afterAll() { System.out.println("Running @AfterAll"); }
 
-    // ------------------------------
-    // BASIC TESTS
-    // ------------------------------
+    // ------------------------------ BASIC TESTS ------------------------------
 
     @Test
-    @DisplayName("Category Should Match Constructor")
-    void testCategory() {
-        assertEquals("testShip", ship.getCategory());
-    }
+    void testCategory() { assertEquals("testShip", ship.getCategory()); }
 
     @Test
-    @DisplayName("Initial State Should Be Valid")
     void testInitialState() {
         assertAll(
                 () -> assertEquals(Compass.NORTH, ship.getBearing()),
@@ -84,7 +61,6 @@ public class ShipTest {
     }
 
     @Test
-    @DisplayName("Ship Sinks After All Positions Hit")
     void testSink() {
         ship.shoot(new Position(0, 0));
         ship.shoot(new Position(1, 0));
@@ -92,63 +68,56 @@ public class ShipTest {
         assertFalse(ship.stillFloating());
     }
 
-    // ------------------------------
-    // PARAMETERIZED TEST
-    // ------------------------------
+    // ------------------------------ PARAMETERIZED TESTS ------------------------------
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
-    @DisplayName("Ship Should Occupy All Its Own Coordinates")
     void testOccupiesParameterized(int row) {
         assertTrue(ship.occupies(new Position(row, 0)));
     }
 
-    // ------------------------------
-    // NESTED TESTS
-    // ------------------------------
+    // ------------------------------ BOUNDARY TESTS ------------------------------
 
     @Nested
-    @DisplayName("Boundary Position Tests")
     class BoundaryTests {
 
-        @Test
-        @DisplayName("Top-most Position Should Be Computed Correctly")
-        void testTopMost() {
-            assertEquals(0, ship.getTopMostPos());
-        }
-
-        @Test
-        @DisplayName("Bottom-most Position Should Be Computed Correctly")
-        void testBottomMost() {
-            assertEquals(2, ship.getBottomMostPos());
-        }
-
-        @Test
-        @DisplayName("Left-most Position Should Be Computed Correctly")
-        void testLeftMost() {
-            assertEquals(0, ship.getLeftMostPos());
-        }
-
-        @Test
-        @DisplayName("Right-most Position Should Be Computed Correctly")
-        void testRightMost() {
-            assertEquals(0, ship.getRightMostPos());
-        }
+        @Test void testTopMost() { assertEquals(0, ship.getTopMostPos()); }
+        @Test void testBottomMost() { assertEquals(2, ship.getBottomMostPos()); }
+        @Test void testLeftMost() { assertEquals(0, ship.getLeftMostPos()); }
+        @Test void testRightMost() { assertEquals(0, ship.getRightMostPos()); }
     }
 
-    // ------------------------------
-    // ERROR CASE TEST
-    // ------------------------------
+    // ------------------------------ NULL AND EDGE CASES ------------------------------
 
-    @Test
-    @DisplayName("shoot() Should Not Allow Null")
-    void testShootNull() {
+    @Test void testShootNull() {
         assertThrows(AssertionError.class, () -> ship.shoot(null));
     }
 
+    @Test void testOccupiesNull() {
+        assertThrows(AssertionError.class, () -> ship.occupies(null));
+    }
+
+    @Test void testTooCloseToNullShip() {
+        assertThrows(AssertionError.class, () -> ship.tooCloseTo((IShip) null));
+    }
+
+    @Test void testTooCloseToNonAdjacentPosition() {
+        Position far = new Position(10, 10);
+        assertFalse(ship.tooCloseTo(far));
+    }
+
+    // ------------------------------ toString & buildShip ------------------------------
+
+    @Test void testToString() { assertNotNull(ship.toString()); }
+
     @Test
-    @DisplayName("toString() Should Not Return Null")
-    void testToString() {
-        assertNotNull(ship.toString());
+    void testBuildShip() {
+        Position pos = new Position(0, 0);
+        assertTrue(Ship.buildShip("barca", Compass.NORTH, pos) instanceof Barge);
+        assertTrue(Ship.buildShip("caravela", Compass.NORTH, pos) instanceof Caravel);
+        assertTrue(Ship.buildShip("nau", Compass.NORTH, pos) instanceof Carrack);
+        assertTrue(Ship.buildShip("fragata", Compass.NORTH, pos) instanceof Frigate);
+        assertTrue(Ship.buildShip("galeao", Compass.NORTH, pos) instanceof Galleon);
+        assertNull(Ship.buildShip("InvalidShip", Compass.NORTH, pos));
     }
 }

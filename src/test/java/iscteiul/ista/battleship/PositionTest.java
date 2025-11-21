@@ -110,8 +110,8 @@ public class PositionTest {
 
     // ───────────────────────────────────────────────────────────────
     @Nested
-    @DisplayName("Equality and Hash Tests")
-    class EqualityHashTests {
+    @DisplayName("Equality, HashCode, and toString Tests")
+    class EqualityHashToStringTests {
 
         @Test
         @DisplayName("Equal positions return true")
@@ -128,10 +128,28 @@ public class PositionTest {
         }
 
         @Test
+        @DisplayName("Equals returns false when argument is null")
+        void testEqualsNull() {
+            assertNotEquals(position, null);
+        }
+
+        @Test
+        @DisplayName("Equals returns false when argument is not a Position")
+        void testEqualsOtherType() {
+            assertNotEquals(position, "NotAPosition");
+        }
+
+        @Test
         @DisplayName("Equal positions have same hashCode")
         void testHashCode() {
             Position other = new Position(3, 5);
             assertEquals(position.hashCode(), other.hashCode());
+        }
+
+        @Test
+        @DisplayName("toString returns expected format")
+        void testToString() {
+            assertEquals("Linha = 3 Coluna = 5", position.toString());
         }
     }
 }
