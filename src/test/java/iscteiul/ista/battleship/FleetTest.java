@@ -92,6 +92,23 @@ public class FleetTest {
         assertFalse(added);
     }
 
+    @Test
+    @DisplayName("Cannot add ship outside board")
+    void testAddShipOutsideBoard() {
+        IShip outsideShip = new DummyShip("Caravela", Compass.NORTH, new Position(Fleet.BOARD_SIZE, 0), 2);
+        assertFalse(fleet.addShip(outsideShip));
+    }
+
+    @Test
+    @DisplayName("Cannot add more ships than FLEET_SIZE")
+    void testAddShipExceedsFleetSize() {
+        for (int i = 0; i < Fleet.FLEET_SIZE; i++) {
+            fleet.addShip(new DummyShip("Barca", Compass.NORTH, new Position(i, 0), 1));
+        }
+        IShip extraShip = new DummyShip("Barca", Compass.NORTH, new Position(0, 1), 1);
+        assertFalse(fleet.addShip(extraShip));
+    }
+
     // ------------------------------
     @Nested
     @DisplayName("Get Ships Like Category")
@@ -194,6 +211,12 @@ public class FleetTest {
         void testPrintShipsByCategory() {
             fleet.addShip(testShip1);
             assertDoesNotThrow(() -> fleet.printShipsByCategory("Galeao"));
+        }
+
+        @Test
+        @DisplayName("Printing ships by null category triggers assertion")
+        void testPrintShipsByCategoryNull() {
+            assertThrows(AssertionError.class, () -> fleet.printShipsByCategory(null));
         }
     }
 }
