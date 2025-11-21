@@ -86,9 +86,9 @@ public class GalleonTest {
     class ExceptionTests {
 
         @Test
-        @DisplayName("Constructor throws NullPointerException for null bearing")
+        @DisplayName("Constructor throws AssertionError for null bearing")
         void testConstructorNullBearing() {
-            assertThrows(NullPointerException.class, () -> new Galleon(null, new Position(0, 0)));
+            assertThrows(AssertionError.class, () -> new Galleon(null, new Position(0, 0)));
         }
 
         @Test
