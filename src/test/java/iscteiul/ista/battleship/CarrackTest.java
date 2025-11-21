@@ -1,5 +1,6 @@
 package iscteiul.ista.battleship;
 
+import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -8,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Carrack Class Test Suite")
+@TmsLink("C5")
 public class CarrackTest {
 
     private Carrack carrack;

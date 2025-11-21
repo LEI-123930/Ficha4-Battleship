@@ -3,11 +3,13 @@ package iscteiul.ista.battleship;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import io.qameta.allure.TmsLink; // <--- ADICIONAR ESTE IMPORT
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Barge Class Test Suite")
+@TmsLink("C3")
 public class BargeTest {
 
     private Barge barge;
